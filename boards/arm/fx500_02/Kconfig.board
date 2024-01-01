@@ -4,4 +4,4 @@
 
 config BOARD_FXA500_02
 	bool "Fenix Auto FXA500-02 Board"
-	depends on SOC_M467
+	depends on SOC_M2354

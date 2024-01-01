@@ -89,7 +89,8 @@ static int gpio_numaker_configure(const struct device *dev, gpio_pin_t pin, gpio
 
 	/* Set Multi-function, default is GPIO */
 	port_index = (config->reg - config->gpa_base) / config->size;
-	GPx_MFPx = ((uint32_t *)&SYS->GPA_MFP0) + port_index * 4 + (pin / 4);
+	// GPx_MFPx = ((uint32_t *)&SYS->GPA_MFP0) + port_index * 4 + (pin / 4);
+	GPx_MFPx = ((uint32_t *)&SYS->GPA_MFPL) + port_index * 4 + (pin / 4);
 	pinMfpGpio = 0x00UL;
 	/*
 	 * E.g.: SYS->GPA_MFP0  = (SYS->GPA_MFP0 & (~SYS_GPA_MFP0_PA0MFP_Msk) ) |

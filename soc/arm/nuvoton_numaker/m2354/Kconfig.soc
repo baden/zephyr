@@ -1,0 +1,13 @@
+# Copyright (c) 2023 Nuvoton Technology Corporation.
+#
+# SPDX-License-Identifier: Apache-2.0
+
+choice
+	prompt "Nuvoton M2354 MCU Selection"
+	depends on SOC_SERIES_M2354
+
+config SOC_M2354
+	bool "M2354"
+	select HAS_NUMAKER_HAL
+
+endchoice

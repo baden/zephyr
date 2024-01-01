@@ -1,0 +1,12 @@
+# Copyright (c) 2023 Nuvoton Technology Corporation.
+#
+# SPDX-License-Identifier: Apache-2.0
+
+if SOC_SERIES_M2354
+
+source "soc/arm/nuvoton_numaker/m2354/Kconfig.defconfig.m2354"
+
+config SOC_SERIES
+	default "m2354"
+
+endif # SOC_SERIES_M2354
