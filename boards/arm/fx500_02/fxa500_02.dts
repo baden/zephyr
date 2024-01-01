@@ -12,7 +12,7 @@
 
 / {
 	model = "Nuvoton PFM M467 board";
-	compatible = "nuvoton,pfm-m467", "nuvoton,m467";
+	compatible = "nuvoton,pfm-m467", "nuvoton,m2354";
 
 	aliases {
 		led0 = &out_led;

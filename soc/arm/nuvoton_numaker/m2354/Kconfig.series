@@ -6,7 +6,7 @@ config SOC_SERIES_M2354
 	bool "Nuvoton M2354 Series MCU"
 	select ARM
 	select CPU_CORTEX_M23
-	#select CPU_CORTEX_M_HAS_DWT
+	select CPU_CORTEX_M_HAS_DWT
 	#select CPU_HAS_FPU
 	select CPU_CORTEX_M_HAS_VTOR
 	select CPU_HAS_ARM_SAU

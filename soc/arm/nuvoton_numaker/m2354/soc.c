@@ -9,11 +9,56 @@
 /* Hardware and starter kit includes. */
 #include <NuMicro.h>
 
+void SYS_Init(void)
+{
+
+    /* Set PF multi-function pins for XT1_OUT(PF.2) and XT1_IN(PF.3) */
+    SYS->GPF_MFPL = (SYS->GPF_MFPL & (~SYS_GPF_MFPL_PF2MFP_Msk)) | SYS_GPF_MFPL_PF2MFP_XT1_OUT;
+    SYS->GPF_MFPL = (SYS->GPF_MFPL & (~SYS_GPF_MFPL_PF3MFP_Msk)) | SYS_GPF_MFPL_PF3MFP_XT1_IN;
+
+    /*---------------------------------------------------------------------------------------------------------*/
+    /* Init System Clock                                                                                       */
+    /*---------------------------------------------------------------------------------------------------------*/
+
+    /* Enable HIRC and HXT clock */
+    CLK_EnableXtalRC(CLK_PWRCTL_HIRCEN_Msk | CLK_PWRCTL_HXTEN_Msk);
+
+    /* Wait for HIRC and HXT clock ready */
+    CLK_WaitClockReady(CLK_STATUS_HIRCSTB_Msk | CLK_STATUS_HXTSTB_Msk);
+
+    /* Set core clock to 96MHz */
+    CLK_SetCoreClock(96000000);
+
+    /* Enable UART0 module clock */
+//     CLK_EnableModuleClock(UART0_MODULE);
+
+    /* Select UART0 module clock source as HXT and UART module clock divider as 1 */
+//     CLK_SetModuleClock(UART0_MODULE, CLK_CLKSEL2_UART0SEL_HXT, CLK_CLKDIV0_UART0(1));
+
+    /*---------------------------------------------------------------------------------------------------------*/
+    /* Init I/O Multi-function                                                                                 */
+    /*---------------------------------------------------------------------------------------------------------*/
+
+    /* Set multi-function pins for UART0 RXD and TXD */
+//     SYS->GPA_MFPL = (SYS->GPA_MFPL & (~(UART0_RXD_PA6_Msk | UART0_TXD_PA7_Msk))) | UART0_RXD_PA6 | UART0_TXD_PA7;
+}
+
+
 void z_arm_platform_init(void)
 {
 
-    PF6 = 1;
-    GPIO_SetMode(PF, BIT6, GPIO_MODE_OUTPUT);   // PF6 - LED
+    /* Unlock protected registers */
+    SYS_UnlockReg();
+
+    SystemInit();
+
+    /* Init System, peripheral clock and multi-function I/O */
+    SYS_Init();
+
+    /* Lock protected registers */
+    SYS_LockReg();
+
+	return;
 
 	SystemInit();
 
