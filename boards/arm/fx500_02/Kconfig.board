@@ -1,0 +1,7 @@
+# SPDX-License-Identifier: Apache-2.0
+#
+# Copyright (c) 2024 BaDen (baden.i.ua@gmail.com)
+
+config BOARD_FXA500_02
+	bool "Fenix Auto FXA500-02 Board"
+	depends on SOC_M467
