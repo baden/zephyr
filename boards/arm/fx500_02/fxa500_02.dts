@@ -6,7 +6,7 @@
 
 /dts-v1/;
 
-#include <nuvoton/m46x.dtsi>
+#include <nuvoton/m2354.dtsi>
 #include "fxa500_02-pinctrl.dtsi"
 #include <zephyr/dt-bindings/input/input-event-codes.h>
 
