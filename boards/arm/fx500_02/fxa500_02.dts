@@ -15,11 +15,9 @@
 	compatible = "nuvoton,pfm-m467", "nuvoton,m467";
 
 	aliases {
-		led0 = &green_led;
-		led1 = &blue_led;
-		led2 = &red_led;
-		sw0 = &user_button_1;
-		sw1 = &user_button_2;
+		led0 = &out_led;
+		// sw0 = &user_button_1;
+		// sw1 = &user_button_2;
 	};
 
 	chosen {
@@ -34,33 +32,25 @@
 
 	leds {
 		compatible = "gpio-leds";
-		red_led: led_0 {
-			gpios = <&gpioh 4 GPIO_ACTIVE_LOW>;
-			label = "User LD1";
-		};
-		green_led: led_1 {
-			gpios = <&gpioh 6 GPIO_ACTIVE_LOW>;
-			label = "User LD2";
-		};
-		blue_led: led_2 {
-			gpios = <&gpioh 5 GPIO_ACTIVE_LOW>;
-			label = "User LD3";
+		out_led: led_0 {
+			gpios = <&gpiof 6 GPIO_ACTIVE_HIGH>;
+			label = "External LED out";
 		};
 	};
 
-	gpio_keys {
-		compatible = "gpio-keys";
-		user_button_1: button_1 {
-			label = "User SW2";
-			gpios = <&gpioh 1 GPIO_ACTIVE_LOW>;
-			zephyr,code = <INPUT_KEY_0>;
-		};
-		user_button_2: button_2 {
-			label = "User SW3";
-			gpios = <&gpioh 0 GPIO_ACTIVE_LOW>;
-			zephyr,code = <INPUT_KEY_1>;
-		};
-	};
+	// gpio_keys {
+	// 	compatible = "gpio-keys";
+	// 	user_button_1: button_1 {
+	// 		label = "User SW2";
+	// 		gpios = <&gpioh 1 GPIO_ACTIVE_LOW>;
+	// 		zephyr,code = <INPUT_KEY_0>;
+	// 	};
+	// 	user_button_2: button_2 {
+	// 		label = "User SW3";
+	// 		gpios = <&gpioh 0 GPIO_ACTIVE_LOW>;
+	// 		zephyr,code = <INPUT_KEY_1>;
+	// 	};
+	// };
 };
 
 &scc {
@@ -69,11 +59,11 @@
 	core-clock = <192000000>;
 };
 
-&gpiob {
+&gpioc {
 	status = "okay";
 };
 
-&gpioh {
+&gpiof {
 	status = "okay";
 };
 
