@@ -7,12 +7,19 @@
 #include "pinctrl/m2354sjfae-pinctrl.h"
 
 &pinctrl {
-	uart0_default: uart0_default {
+	// uart0_default: uart0_default {
+	// 	group0 {
+	// 		pinmux = <PB12MFP_UART0_RXD>,
+	// 			 <PB13MFP_UART0_TXD>;
+	// 	};
+	// };
+	uart3_default: uart3_default {
 		group0 {
-			pinmux = <PB12MFP_UART0_RXD>,
-				 <PB13MFP_UART0_TXD>;
+			pinmux = <PC2MFP_UART3_RXD>,
+				 <PC3MFP_UART3_TXD>;
 		};
 	};
+
 
 	// /* TX/RX/RTS/CTS/RST --> D1/D0/A2/A3/D2 --> PB3/PB2/PB8/PB9/PC9 */
 	// uart1_default: uart1_default {
