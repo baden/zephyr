@@ -9,6 +9,7 @@
 /* Hardware and starter kit includes. */
 #include <NuMicro.h>
 
+#if 0
 void SYS_Init(void)
 {
 
@@ -42,21 +43,344 @@ void SYS_Init(void)
     /* Set multi-function pins for UART0 RXD and TXD */
 //     SYS->GPA_MFPL = (SYS->GPA_MFPL & (~(UART0_RXD_PA6_Msk | UART0_TXD_PA7_Msk))) | UART0_RXD_PA6 | UART0_TXD_PA7;
 }
+#endif
 
-
-void z_arm_platform_init(void)
+void SYS_Init(void)
 {
+
+#if 0
+    /*---------------------------------------------------------------------------------------------------------*/
+    /* Init System Clock                                                                                       */
+    /*---------------------------------------------------------------------------------------------------------*/
+
+    /* Enable HIRC clock */
+    CLK_EnableXtalRC(CLK_PWRCTL_HIRCEN_Msk);
+
+    /* Wait for HIRC clock ready */
+    CLK_WaitClockReady(CLK_STATUS_HIRCSTB_Msk);
+
+    /* Set core clock to PLL_CLOCK */
+    CLK_SetCoreClock(PLL_CLOCK);
+
+    // /* Enable UART0 module clock */
+    // CLK_EnableModuleClock(UART0_MODULE);
+
+#endif
+
+#if 0
+/********************
+    MCU:M2354SJFAE(LQFP64)
+    Base Clocks:
+    LIRC:10kHz
+    HIRC:12MHz
+    HCLK:12MHz
+    PCLK0:12MHz
+    PCLK1:12MHz
+    Enabled-Module Frequencies:
+    EWDT=Bus Clock(PCLK0):12MHz/Engine Clock:10kHz
+    EWWDT=Bus Clock(PCLK0):12MHz/Engine Clock:5.8594kHz
+    FMCIDLE=Bus Clock(HCLK):12MHz/Engine Clock:12MHz
+    SRAM0=Bus Clock(HCLK):12MHz
+    TMR0=Bus Clock(PCLK0):12MHz/Engine Clock:12MHz
+    UART3=Bus Clock(PCLK1):12MHz/Engine Clock:12MHz
+    WDT=Bus Clock(PCLK0):12MHz/Engine Clock:10kHz
+    WWDT=Bus Clock(PCLK0):12MHz/Engine Clock:5.8594kHz
+********************/
+    /*---------------------------------------------------------------------------------------------------------*/
+    /* Init System Clock                                                                                       */
+    /*---------------------------------------------------------------------------------------------------------*/
+    //RTC->LXTCTL   = (RTC->LXTCTL   & ~(0x000000C1UL)) | 0x0000000EUL;
+    //CLK->PWRCTL   = (CLK->PWRCTL   & ~(0x0034000FUL)) | 0x0000000CUL;
+    //CLK->PLLCTL   = (CLK->PLLCTL   & ~(0x000BFFFFUL)) | 0x0009440AUL;
+    //CLK->CLKDIV0  = (CLK->CLKDIV0  & ~(0xFFFFFFFFUL)) | 0x00000000UL;
+    //CLK->CLKDIV1  = (CLK->CLKDIV1  & ~(0x00FFFFFFUL)) | 0x00000000UL;
+    //CLK->CLKDIV4  = (CLK->CLKDIV4  & ~(0x0000FFFFUL)) | 0x00000000UL;
+    //CLK->CLKSEL0  = (CLK->CLKSEL0  & ~(0x0030013FUL)) | 0x0020011FUL;
+    //CLK->CLKSEL1  = (CLK->CLKSEL1  & ~(0xF07777FFUL)) | 0xA02222B3UL;
+    //CLK->CLKSEL2  = (CLK->CLKSEL2  & ~(0x77773FFFUL)) | 0x44442BABUL;
+    //CLK->CLKSEL3  = (CLK->CLKSEL3  & ~(0x7703773FUL)) | 0x4402222AUL;
+    //CLK->AHBCLK   = (CLK->AHBCLK   & ~(0xFF71F0DFUL)) | 0x00108000UL;
+    //CLK->APBCLK0  = (CLK->APBCLK0  & ~(0xBD7FF7FFUL)) | 0x80080005UL;
+    //CLK->APBCLK1  = (CLK->APBCLK1  & ~(0x1FCF1377UL)) | 0x00000000UL;
+    //CLK->CLKOCTL  = (CLK->CLKOCTL  & ~(0x0000007FUL)) | 0x00000000UL;
+    //SysTick->CTRL = (SysTick->CTRL & ~(0x00000005UL)) | 0x00000000UL;
 
     /* Unlock protected registers */
     SYS_UnlockReg();
 
+    /* If the macros do not exist in your project, please refer to the related clk.h in Header folder of the tool package */
+    /* Enable clock source */
+    CLK_EnableXtalRC(CLK_PWRCTL_LIRCEN_Msk|CLK_PWRCTL_HIRCEN_Msk);
+
+    /* Waiting for clock source ready */
+    CLK_WaitClockReady(CLK_STATUS_LIRCSTB_Msk|CLK_STATUS_HIRCSTB_Msk);
+
+    /* Set HCLK clock */
+    CLK_SetHCLK(CLK_CLKSEL0_HCLKSEL_HIRC, CLK_CLKDIV0_HCLK(1));
+
+    /* Enable IP clock */
+    CLK_EnableModuleClock(EWDT_MODULE);
+    CLK_EnableModuleClock(EWWDT_MODULE);
+    CLK_EnableModuleClock(FMCIDLE_MODULE);
+    CLK_EnableModuleClock(SRAM0_MODULE);
+    CLK_EnableModuleClock(TMR0_MODULE);
+    CLK_EnableModuleClock(TMR1_MODULE);
+    CLK_EnableModuleClock(UART3_MODULE);
+    CLK_EnableModuleClock(WDT_MODULE);
+    CLK_EnableModuleClock(WWDT_MODULE);
+
+    /* Set IP clock */
+    CLK_SetModuleClock(EWDT_MODULE, CLK_CLKSEL1_EWDTSEL_LIRC, MODULE_NoMsk);
+    CLK_SetModuleClock(EWWDT_MODULE, CLK_CLKSEL1_EWWDTSEL_HCLK_DIV2048, MODULE_NoMsk);
+    CLK_SetModuleClock(TMR0_MODULE, CLK_CLKSEL1_TMR0SEL_PCLK0, MODULE_NoMsk);
+    CLK_SetModuleClock(TMR1_MODULE, CLK_CLKSEL1_TMR1SEL_PCLK0, MODULE_NoMsk);
+    CLK_SetModuleClock(UART3_MODULE, CLK_CLKSEL2_UART3SEL_PCLK1, CLK_CLKDIV4_UART3(1));
+    CLK_SetModuleClock(WDT_MODULE, CLK_CLKSEL1_WDTSEL_LIRC, MODULE_NoMsk);
+    CLK_SetModuleClock(WWDT_MODULE, CLK_CLKSEL1_WWDTSEL_HCLK_DIV2048, MODULE_NoMsk);
+
+    /* Update System Core Clock */
+    /* User can use SystemCoreClockUpdate() to calculate SystemCoreClock. */
+    SystemCoreClockUpdate();
+
+#endif
+
+#if 0
+/********************
+MCU:M2354SJFAE(LQFP64)
+Base Clocks:
+    LIRC:10kHz
+    HIRC:12MHz
+    HCLK:4MHz
+    PCLK0:4MHz
+    PCLK1:4MHz
+    Enabled-Module Frequencies:
+    EWDT=Bus Clock(PCLK0):4MHz/Engine Clock:10kHz
+    EWWDT=Bus Clock(PCLK0):4MHz/Engine Clock:1.9531kHz
+    FMCIDLE=Bus Clock(HCLK):4MHz/Engine Clock:12MHz
+    SRAM0=Bus Clock(HCLK):4MHz
+    TMR0=Bus Clock(PCLK0):4MHz/Engine Clock:4MHz
+    UART3=Bus Clock(PCLK1):4MHz/Engine Clock:12MHz
+    WDT=Bus Clock(PCLK0):4MHz/Engine Clock:10kHz
+    WWDT=Bus Clock(PCLK0):4MHz/Engine Clock:1.9531kHz
+********************/
+    /*---------------------------------------------------------------------------------------------------------*/
+    /* Init System Clock                                                                                       */
+    /*---------------------------------------------------------------------------------------------------------*/
+    //RTC->LXTCTL   = (RTC->LXTCTL   & ~(0x000000C1UL)) | 0x0000000EUL;
+    //CLK->PWRCTL   = (CLK->PWRCTL   & ~(0x0034000FUL)) | 0x0000000CUL;
+    //CLK->PLLCTL   = (CLK->PLLCTL   & ~(0x000BFFFFUL)) | 0x0009440AUL;
+    //CLK->CLKDIV0  = (CLK->CLKDIV0  & ~(0xFFFFFFFFUL)) | 0x00000002UL;
+    //CLK->CLKDIV1  = (CLK->CLKDIV1  & ~(0x00FFFFFFUL)) | 0x00000000UL;
+    //CLK->CLKDIV4  = (CLK->CLKDIV4  & ~(0x0000FFFFUL)) | 0x00000000UL;
+    //CLK->CLKSEL0  = (CLK->CLKSEL0  & ~(0x0030013FUL)) | 0x0020011FUL;
+    //CLK->CLKSEL1  = (CLK->CLKSEL1  & ~(0xF07777FFUL)) | 0xA02222B3UL;
+    //CLK->CLKSEL2  = (CLK->CLKSEL2  & ~(0x77773FFFUL)) | 0x34442BABUL;
+    //CLK->CLKSEL3  = (CLK->CLKSEL3  & ~(0x7703773FUL)) | 0x4402222AUL;
+    //CLK->AHBCLK   = (CLK->AHBCLK   & ~(0xFF71F0DFUL)) | 0x00108000UL;
+    //CLK->APBCLK0  = (CLK->APBCLK0  & ~(0xBD7FF7FFUL)) | 0x80080005UL;
+    //CLK->APBCLK1  = (CLK->APBCLK1  & ~(0x1FCF1377UL)) | 0x00000000UL;
+    //CLK->CLKOCTL  = (CLK->CLKOCTL  & ~(0x0000007FUL)) | 0x00000000UL;
+    //SysTick->CTRL = (SysTick->CTRL & ~(0x00000005UL)) | 0x00000000UL;
+
+    /* Unlock protected registers */
+    SYS_UnlockReg();
+
+    /* If the macros do not exist in your project, please refer to the related clk.h in Header folder of the tool package */
+    /* Enable clock source */
+    CLK_EnableXtalRC(CLK_PWRCTL_LIRCEN_Msk|CLK_PWRCTL_HIRCEN_Msk);
+
+    /* Waiting for clock source ready */
+    CLK_WaitClockReady(CLK_STATUS_LIRCSTB_Msk|CLK_STATUS_HIRCSTB_Msk);
+
+    /* Set HCLK clock */
+    CLK_SetHCLK(CLK_CLKSEL0_HCLKSEL_HIRC, CLK_CLKDIV0_HCLK(3));
+
+    /* Enable IP clock */
+    CLK_EnableModuleClock(EWDT_MODULE);
+    CLK_EnableModuleClock(EWWDT_MODULE);
+    CLK_EnableModuleClock(FMCIDLE_MODULE);
+    CLK_EnableModuleClock(SRAM0_MODULE);
+    CLK_EnableModuleClock(TMR0_MODULE);
+    CLK_EnableModuleClock(TMR1_MODULE);
+    CLK_EnableModuleClock(UART3_MODULE);
+    CLK_EnableModuleClock(WDT_MODULE);
+    CLK_EnableModuleClock(WWDT_MODULE);
+
+    /* Set IP clock */
+    CLK_SetModuleClock(EWDT_MODULE, CLK_CLKSEL1_EWDTSEL_LIRC, MODULE_NoMsk);
+    CLK_SetModuleClock(EWWDT_MODULE, CLK_CLKSEL1_EWWDTSEL_HCLK_DIV2048, MODULE_NoMsk);
+    CLK_SetModuleClock(TMR0_MODULE, CLK_CLKSEL1_TMR0SEL_PCLK0, MODULE_NoMsk);
+    CLK_SetModuleClock(TMR1_MODULE, CLK_CLKSEL1_TMR1SEL_PCLK0, MODULE_NoMsk);
+    CLK_SetModuleClock(UART3_MODULE, CLK_CLKSEL2_UART3SEL_HIRC, CLK_CLKDIV4_UART3(1));
+    CLK_SetModuleClock(WDT_MODULE, CLK_CLKSEL1_WDTSEL_LIRC, MODULE_NoMsk);
+    CLK_SetModuleClock(WWDT_MODULE, CLK_CLKSEL1_WWDTSEL_HCLK_DIV2048, MODULE_NoMsk);
+
+
+    /* Update System Core Clock */
+    /* User can use SystemCoreClockUpdate() to calculate SystemCoreClock. */
+    SystemCoreClockUpdate();
+#endif
+
+#if 1
+/********************
+MCU:M2354SJFAE(LQFP64)
+Base Clocks:
+LIRC:10kHz
+HIRC:12MHz
+HCLK:1MHz
+PCLK0:1MHz
+PCLK1:1MHz
+Enabled-Module Frequencies:
+EWDT=Bus Clock(PCLK0):1MHz/Engine Clock:10kHz
+EWWDT=Bus Clock(PCLK0):1MHz/Engine Clock:488.2813Hz
+FMCIDLE=Bus Clock(HCLK):1MHz/Engine Clock:12MHz
+SRAM0=Bus Clock(HCLK):1MHz
+SYSTICK=Bus Clock(HCLK):1MHz/Engine Clock:1MHz
+TMR0=Bus Clock(PCLK0):1MHz/Engine Clock:1MHz
+TMR1=Bus Clock(PCLK0):1MHz/Engine Clock:1MHz
+UART3=Bus Clock(PCLK1):1MHz/Engine Clock:12MHz
+WDT=Bus Clock(PCLK0):1MHz/Engine Clock:10kHz
+WWDT=Bus Clock(PCLK0):1MHz/Engine Clock:488.2813Hz
+********************/
+
+    /*---------------------------------------------------------------------------------------------------------*/
+    /* Init System Clock                                                                                       */
+    /*---------------------------------------------------------------------------------------------------------*/
+    //RTC->LXTCTL   = (RTC->LXTCTL   & ~(0x000000C1UL)) | 0x0000000EUL;
+    //CLK->PWRCTL   = (CLK->PWRCTL   & ~(0x0034000FUL)) | 0x0000000CUL;
+    //CLK->PLLCTL   = (CLK->PLLCTL   & ~(0x000BFFFFUL)) | 0x0009440AUL;
+    //CLK->CLKDIV0  = (CLK->CLKDIV0  & ~(0xFFFFFFFFUL)) | 0x0000000BUL;
+    //CLK->CLKDIV1  = (CLK->CLKDIV1  & ~(0x00FFFFFFUL)) | 0x00000000UL;
+    //CLK->CLKDIV4  = (CLK->CLKDIV4  & ~(0x0000FFFFUL)) | 0x00000000UL;
+    //CLK->CLKSEL0  = (CLK->CLKSEL0  & ~(0x0030013FUL)) | 0x0020011FUL;
+    //CLK->CLKSEL1  = (CLK->CLKSEL1  & ~(0xF07777FFUL)) | 0xA02222B3UL;
+    //CLK->CLKSEL2  = (CLK->CLKSEL2  & ~(0x77773FFFUL)) | 0x34442BABUL;
+    //CLK->CLKSEL3  = (CLK->CLKSEL3  & ~(0x7703773FUL)) | 0x4402222AUL;
+    //CLK->AHBCLK   = (CLK->AHBCLK   & ~(0xFF71F0DFUL)) | 0x00108000UL;
+    //CLK->APBCLK0  = (CLK->APBCLK0  & ~(0xBD7FF7FFUL)) | 0x8008000DUL;
+    //CLK->APBCLK1  = (CLK->APBCLK1  & ~(0x1FCF1377UL)) | 0x00000000UL;
+    //CLK->CLKOCTL  = (CLK->CLKOCTL  & ~(0x0000007FUL)) | 0x00000000UL;
+    //SysTick->CTRL = (SysTick->CTRL & ~(0x00000005UL)) | 0x00000005UL;
+
+    /* Unlock protected registers */
+    SYS_UnlockReg();
+
+    /* If the macros do not exist in your project, please refer to the related clk.h in Header folder of the tool package */
+    /* Enable clock source */
+    CLK_EnableXtalRC(CLK_PWRCTL_LIRCEN_Msk|CLK_PWRCTL_HIRCEN_Msk);
+
+    /* Waiting for clock source ready */
+    CLK_WaitClockReady(CLK_STATUS_LIRCSTB_Msk|CLK_STATUS_HIRCSTB_Msk);
+
+    /* Set HCLK clock */
+    CLK_SetHCLK(CLK_CLKSEL0_HCLKSEL_HIRC, CLK_CLKDIV0_HCLK(12));
+
+    /* Enable IP clock */
+    CLK_EnableModuleClock(EWDT_MODULE);
+    CLK_EnableModuleClock(EWWDT_MODULE);
+    CLK_EnableModuleClock(FMCIDLE_MODULE);
+    CLK_EnableModuleClock(SRAM0_MODULE);
+    CLK_EnableModuleClock(TMR0_MODULE);
+    CLK_EnableModuleClock(TMR1_MODULE);
+    CLK_EnableModuleClock(UART3_MODULE);
+    CLK_EnableModuleClock(WDT_MODULE);
+    CLK_EnableModuleClock(WWDT_MODULE);
+    CLK_EnableSysTick(CLK_CLKSEL0_STCLKSEL_HCLK, 0);
+
+    /* Set IP clock */
+    CLK_SetModuleClock(EWDT_MODULE, CLK_CLKSEL1_EWDTSEL_LIRC, MODULE_NoMsk);
+    CLK_SetModuleClock(EWWDT_MODULE, CLK_CLKSEL1_EWWDTSEL_HCLK_DIV2048, MODULE_NoMsk);
+    CLK_SetModuleClock(TMR0_MODULE, CLK_CLKSEL1_TMR0SEL_PCLK0, MODULE_NoMsk);
+    CLK_SetModuleClock(TMR1_MODULE, CLK_CLKSEL1_TMR1SEL_PCLK0, MODULE_NoMsk);
+    CLK_SetModuleClock(UART3_MODULE, CLK_CLKSEL2_UART3SEL_HIRC, CLK_CLKDIV4_UART3(1));
+    CLK_SetModuleClock(WDT_MODULE, CLK_CLKSEL1_WDTSEL_LIRC, MODULE_NoMsk);
+    CLK_SetModuleClock(WWDT_MODULE, CLK_CLKSEL1_WWDTSEL_HCLK_DIV2048, MODULE_NoMsk);
+
+    /* Update System Core Clock */
+    /* User can use SystemCoreClockUpdate() to calculate SystemCoreClock. */
+    SystemCoreClockUpdate();
+#endif
+
+
+
+#if 0
+    /* Enable UART3 (GPS але зараз це putty) module clock */
+    CLK_EnableModuleClock(UART3_MODULE);
+
+    // /* Select UART0 module clock source as HIRC and UART0 module clock divider as 1 */
+    // CLK_SetModuleClock(UART0_MODULE, CLK_CLKSEL2_UART0SEL_HIRC, CLK_CLKDIV0_UART0(1));
+
+    CLK_SetModuleClock(UART3_MODULE, CLK_CLKSEL2_UART3SEL_HIRC, CLK_CLKDIV4_UART3(1));
+#endif
+    /*---------------------------------------------------------------------------------------------------------*/
+    /* Init I/O Multi-function                                                                                 */
+    /*---------------------------------------------------------------------------------------------------------*/
+
+    /* Set multi-function pins for UART0 RXD and TXD */
+    // SYS->GPF_MFPL = (SYS->GPF_MFPL & (~(UART0_RXD_PF1_Msk | UART0_TXD_PF0_Msk))) | UART0_RXD_PF1 | UART0_TXD_PF0;
+
+    SYS->GPC_MFPL = (SYS->GPC_MFPL & (~(UART3_RXD_PC2_Msk | UART3_TXD_PC3_Msk))) | UART3_RXD_PC2 | UART3_TXD_PC3;
+
+    /* Set PB multi-function pin for EINT0(PB.14) and EINT1(PB.13) */
+    SYS->GPB_MFPL = (SYS->GPB_MFPL & (~(INT0_PB5_Msk | INT1_PB4_Msk))) | INT0_PB5 | INT1_PB4;
+
+#if 0
+    /* Enable HXT */
+    CLK_EnableXtalRC(CLK_PWRCTL_HXTEN_Msk);
+
+    /* Waiting for clock ready */
+    CLK_WaitClockReady(CLK_STATUS_HXTSTB_Msk);
+
+    /* Enable TIMER module clock */
+    CLK_EnableModuleClock(TMR0_MODULE);
+    CLK_SetModuleClock(TMR0_MODULE, CLK_CLKSEL1_TMR0SEL_HXT, 0);
+#endif
+}
+
+
+void UART3_Init(void)
+{
+    /*---------------------------------------------------------------------------------------------------------*/
+    /* Init UART3                                                                                               */
+    /*---------------------------------------------------------------------------------------------------------*/
+    /* Reset UART3 */
+    SYS_ResetModule(UART3_RST);
+
+    /* Configure UART3 and set UART3 baud rate */
+    UART_Open(UART3, 115200);
+}
+
+void SendChar_ToUART(int ch)
+{
+    if((char)ch == '\n')
+    {
+        while(DEBUG_PORT->FIFOSTS & UART_FIFOSTS_TXFULL_Msk) {}
+        DEBUG_PORT->DAT = '\r';
+    }
+
+    while(DEBUG_PORT->FIFOSTS & UART_FIFOSTS_TXFULL_Msk) {}
+    DEBUG_PORT->DAT = (uint32_t)ch;
+}
+
+int arch_printk_char_out(int c)
+{
+	SendChar_ToUART(c);
+}
+
+void z_arm_platform_init(void)
+{
     SystemInit();
+
+    /* Unlock protected registers */
+    SYS_UnlockReg();
 
     /* Init System, peripheral clock and multi-function I/O */
     SYS_Init();
 
     /* Lock protected registers */
     SYS_LockReg();
+    UART3_Init();
+    SendChar_ToUART('\n'); SendChar_ToUART('+'); SendChar_ToUART('\n');
 
 	return;
 

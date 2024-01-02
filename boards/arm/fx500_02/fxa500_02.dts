@@ -88,10 +88,6 @@
 	};
 };
 
-&sram0 {
-	reg = <0x20000000 DT_SIZE_K(512)>;
-};
-
 &uart3 {
 	current-speed = <115200>;
 	pinctrl-0 = <&uart3_default>;
