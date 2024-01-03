@@ -45,6 +45,54 @@ void SYS_Init(void)
 }
 #endif
 
+#define __HXT         (12000000UL)  /*!< High Speed External Crystal Clock Frequency */
+
+void SYS_Init(void)
+{
+
+    /* Enable HIRC clock */
+    CLK_EnableXtalRC(CLK_PWRCTL_HIRCEN_Msk);
+
+    /* Wait for HIRC clock ready */
+    CLK_WaitClockReady(CLK_STATUS_HIRCSTB_Msk);
+
+    /* Set core clock to 96MHz */
+    CLK_SetCoreClock(96000000);
+
+    /* Enable UART0 module clock */
+    CLK_EnableModuleClock(UART3_MODULE);
+
+    /* Select UART0 module clock source as HIRC and UART0 module clock divider as 1 */
+    CLK_SetModuleClock(UART3_MODULE, CLK_CLKSEL2_UART3SEL_HIRC, CLK_CLKDIV4_UART3(1));
+
+    /* Enable EPWM0 module clock */
+    CLK_EnableModuleClock(EPWM0_MODULE);
+
+    /* Select EPWM0 module clock source */
+    CLK_SetModuleClock(EPWM0_MODULE, CLK_CLKSEL2_EPWM0SEL_PCLK0, 0);
+
+    SystemCoreClockUpdate();
+
+    /* Enable IP clock */
+//     CLK_EnableModuleClock(FMCIDLE_MODULE);
+    CLK_EnableModuleClock(GPF_MODULE);
+    CLK_EnableModuleClock(SRAM0_MODULE);
+    CLK_EnableModuleClock(SRAM1_MODULE);
+    CLK_EnableModuleClock(SRAM2_MODULE);
+    CLK_EnableModuleClock(TMR0_MODULE);
+    CLK_EnableModuleClock(TMR1_MODULE);
+    CLK_EnableSysTick(CLK_CLKSEL0_STCLKSEL_HCLK_DIV2, 0);
+
+
+    /* Set IP clock */
+//     CLK_SetModuleClock(TMR0_MODULE, CLK_CLKSEL1_TMR0SEL_PCLK0, MODULE_NoMsk);
+//     CLK_SetModuleClock(TMR1_MODULE, CLK_CLKSEL1_TMR1SEL_PCLK0, MODULE_NoMsk);
+
+    SYS->GPC_MFPL = (SYS->GPC_MFPL & (~(UART3_RXD_PC2_Msk | UART3_TXD_PC3_Msk))) | UART3_RXD_PC2 | UART3_TXD_PC3;
+}
+
+#if 0
+
 void SYS_Init(void)
 {
 
@@ -336,7 +384,7 @@ WWDT=Bus Clock(PCLK0):1MHz/Engine Clock:488.2813Hz
     CLK_SetModuleClock(TMR0_MODULE, CLK_CLKSEL1_TMR0SEL_HXT, 0);
 #endif
 }
-
+#endif
 
 void UART3_Init(void)
 {
@@ -379,6 +427,7 @@ void z_arm_platform_init(void)
 
     /* Lock protected registers */
     SYS_LockReg();
+
     UART3_Init();
     SendChar_ToUART('\n'); SendChar_ToUART('+'); SendChar_ToUART('\n');
 

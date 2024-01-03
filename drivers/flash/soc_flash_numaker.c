@@ -5,7 +5,7 @@
  */
 
 #define DT_DRV_COMPAT nuvoton_numaker_fmc
-
+#if 0
 #include <string.h>
 #include <errno.h>
 #include <zephyr/kernel.h>
@@ -286,3 +286,5 @@ static int flash_numaker_init(const struct device *dev)
 
 DEVICE_DT_INST_DEFINE(0, flash_numaker_init, NULL, &flash_data, NULL, POST_KERNEL,
 		      CONFIG_FLASH_INIT_PRIORITY, &flash_numaker_api);
+
+#endif
