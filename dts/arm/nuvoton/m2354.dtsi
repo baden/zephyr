@@ -27,24 +27,24 @@
          };
      };
 
-     sram0: memory@20000000 {
-         compatible = "mmio-sram";
-         reg = <0x20000000 DT_SIZE_K(256)>;
-     };
 //      sram0: memory@20000000 {
-// 	compatible = "mmio-sram";
-// 	reg = <0x20000000 DT_SIZE_K(32)>;
+//          compatible = "mmio-sram";
+//          reg = <0x20000000 DT_SIZE_K(256)>;
 //      };
-//      sram1: memory@20008000 {
-// 	compatible = "zephyr,memory-region", "mmio-sram";
-// 	reg = <0x20008000 DT_SIZE_K(128)>;
-// 	zephyr,memory-region = "SRAM1";
-//      };
-//      sram3: memory@20028000 {
-// 	compatible = "zephyr,memory-region", "mmio-sram";
-// 	reg = <0x20028000 DT_SIZE_K(96)>;
-// 	zephyr,memory-region = "SRAM2";
-//      };
+     sram0: memory@20000000 {
+	compatible = "mmio-sram";
+	reg = <0x20000000 DT_SIZE_K(32)>;
+     };
+     sram1: memory@20008000 {
+	compatible = "zephyr,memory-region", "mmio-sram";
+	reg = <0x20008000 DT_SIZE_K(128)>;
+	zephyr,memory-region = "SRAM1";
+     };
+     sram3: memory@20028000 {
+	compatible = "zephyr,memory-region", "mmio-sram";
+	reg = <0x20028000 DT_SIZE_K(96)>;
+	zephyr,memory-region = "SRAM2";
+     };
 
      sysclk: system-clock {
          compatible = "fixed-clock";
@@ -85,14 +85,14 @@
              flash0: flash@0 {
                  compatible = "soc-nv-flash";
                  reg = <0 DT_SIZE_K(1024)>;
-                 erase-block-size = <4096>;
+                 erase-block-size = <2048>;
                  write-block-size = <4>;
              };
          };
 
-         uart0: serial@40070000 {
+         uart0: serial@40030000 {
              compatible = "nuvoton,numaker-uart";
-             reg = <0x40070000 0x1000>;
+             reg = <0x40030000 0x1000>;
              interrupts = <36 0>;
              resets = <&rst NUMAKER_UART0_RST>;
              clocks = <&pcc NUMAKER_UART0_MODULE NUMAKER_CLK_CLKSEL2_UART0SEL_HIRC
@@ -100,9 +100,9 @@
              status = "disabled";
          };
 
-         uart1: serial@40071000 {
+         uart1: serial@40031000 {
              compatible = "nuvoton,numaker-uart";
-             reg = <0x40071000 0x1000>;
+             reg = <0x40031000 0x1000>;
              interrupts = <37 0>;
              resets = <&rst NUMAKER_UART1_RST>;
              clocks = <&pcc NUMAKER_UART1_MODULE NUMAKER_CLK_CLKSEL2_UART1SEL_HIRC
@@ -110,9 +110,9 @@
              status = "disabled";
          };
 
-         uart2: serial@40072000 {
+         uart2: serial@40032000 {
              compatible = "nuvoton,numaker-uart";
-             reg = <0x40072000 0x1000>;
+             reg = <0x40032000 0x1000>;
              interrupts = <48 0>;
              resets = <&rst NUMAKER_UART2_RST>;
              clocks = <&pcc NUMAKER_UART2_MODULE NUMAKER_CLK_CLKSEL2_UART2SEL_HIRC
@@ -120,9 +120,9 @@
              status = "disabled";
          };
 
-         uart3: serial@40073000 {
+         uart3: serial@40033000 {
              compatible = "nuvoton,numaker-uart";
-             reg = <0x40073000 0x1000>;
+             reg = <0x40033000 0x1000>;
              interrupts = <49 0>;
              resets = <&rst NUMAKER_UART3_RST>;
              clocks = <&pcc NUMAKER_UART3_MODULE NUMAKER_CLK_CLKSEL2_UART3SEL_HIRC
@@ -130,9 +130,9 @@
              status = "disabled";
          };
 
-         uart4: serial@40074000 {
+         uart4: serial@40034000 {
              compatible = "nuvoton,numaker-uart";
-             reg = <0x40074000 0x1000>;
+             reg = <0x40034000 0x1000>;
              interrupts = <74 0>;
              resets = <&rst NUMAKER_UART4_RST>;
              clocks = <&pcc NUMAKER_UART4_MODULE NUMAKER_CLK_CLKSEL3_UART4SEL_HIRC
@@ -140,9 +140,9 @@
              status = "disabled";
          };
 
-         uart5: serial@40075000 {
+         uart5: serial@40035000 {
              compatible = "nuvoton,numaker-uart";
-             reg = <0x40075000 0x1000>;
+             reg = <0x40035000 0x1000>;
              interrupts = <75 0>;
              resets = <&rst NUMAKER_UART5_RST>;
              clocks = <&pcc NUMAKER_UART5_MODULE NUMAKER_CLK_CLKSEL3_UART5SEL_HIRC
@@ -152,8 +152,8 @@
 
          pinctrl: pin-controller@40000080 {
              compatible = "nuvoton,numaker-pinctrl";
-             reg = <0x40000080 0x28
-                    0x40000500 0xa0>;
+             reg = <0x40000080 0x20
+                    0x40000030 0x40>;
              reg-names = "mfos", "mfp";
              status = "okay";
          };

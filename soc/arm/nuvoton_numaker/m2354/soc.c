@@ -413,6 +413,7 @@ void SendChar_ToUART(int ch)
 int arch_printk_char_out(int c)
 {
 	SendChar_ToUART(c);
+	return 0;
 }
 
 void z_arm_platform_init(void)
@@ -520,7 +521,7 @@ static volatile int32_t g_ICE_Conneced = 1;
 uint32_t ProcessHardFault(uint32_t lr, uint32_t msp, uint32_t psp)
 {
     uint32_t *sp = NULL;
-    uint32_t inst;
+    uint32_t inst = 0;
 
     /* Check the used stack */
     if(lr & 0x40)

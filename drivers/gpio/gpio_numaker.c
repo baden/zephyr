@@ -15,7 +15,8 @@
 #include <zephyr/logging/log.h>
 #include <NuMicro.h>
 
-#define NU_MFP_POS(pinindex) ((pinindex % 4) * 8)
+// #define NU_MFP_POS(pinindex) ((pinindex % 4) * 8)	// M460
+#define NU_MFP_POS(pinindex) ((pinindex % 8) * 4)	// M2354
 
 LOG_MODULE_REGISTER(gpio_numaker, LOG_LEVEL_ERR);
 
@@ -38,7 +39,8 @@ static int gpio_numaker_configure(const struct device *dev, gpio_pin_t pin, gpio
 	const struct gpio_numaker_config *config = dev->config;
 	struct gpio_numaker_data *data = dev->data;
 	GPIO_T *gpio_base = (GPIO_T *)config->reg;
-	uint32_t pinMfpMask = (0x1f << NU_MFP_POS(pin));
+	// uint32_t pinMfpMask = (0x1f << NU_MFP_POS(pin));	//  M460
+	uint32_t pinMfpMask = (0x0f << NU_MFP_POS(pin));	//  M2354
 	uint32_t pinMask = BIT(pin); /* mask for pin index --> (0x01 << pin) */
 	uint32_t port_index;
 	uint32_t *GPx_MFPx;
@@ -89,8 +91,8 @@ static int gpio_numaker_configure(const struct device *dev, gpio_pin_t pin, gpio
 
 	/* Set Multi-function, default is GPIO */
 	port_index = (config->reg - config->gpa_base) / config->size;
-	// GPx_MFPx = ((uint32_t *)&SYS->GPA_MFP0) + port_index * 4 + (pin / 4);
-	GPx_MFPx = ((uint32_t *)&SYS->GPA_MFPL) + port_index * 4 + (pin / 4);
+	// GPx_MFPx = ((uint32_t *)&SYS->GPA_MFP0) + port_index * 4 + (pin / 4);	// M460
+	GPx_MFPx = ((uint32_t *)&SYS->GPA_MFPL) + port_index * 2 + (pin / 8);		// M2354
 	pinMfpGpio = 0x00UL;
 	/*
 	 * E.g.: SYS->GPA_MFP0  = (SYS->GPA_MFP0 & (~SYS_GPA_MFP0_PA0MFP_Msk) ) |

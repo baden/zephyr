@@ -5,7 +5,7 @@
  */
 
 #define DT_DRV_COMPAT nuvoton_numaker_fmc
-#if 0
+#if 1
 #include <string.h>
 #include <errno.h>
 #include <zephyr/kernel.h>
@@ -20,9 +20,15 @@ LOG_MODULE_REGISTER(flash_numaker, CONFIG_FLASH_LOG_LEVEL);
 #define SOC_NV_FLASH_NODE DT_INST(0, soc_nv_flash)
 #define SOC_NV_FLASH_WRITE_BLOCK_SIZE DT_PROP_OR(SOC_NV_FLASH_NODE, write_block_size, 0x04)
 
+#if defined(CONFIG_MULTITHREADING)
+#endif
+
+
 struct flash_numaker_data {
 	FMC_T *fmc;
-	struct k_sem write_lock;
+	#if defined(CONFIG_MULTITHREADING)
+		struct k_sem write_lock;
+	#endif
 	uint32_t flash_block_base;
 };
 
@@ -86,10 +92,12 @@ static int flash_numaker_erase(const struct device *dev, off_t offset, size_t le
 		return -EINVAL;
 	}
 
+	#if defined(CONFIG_MULTITHREADING)
 	/* take semaphore */
 	if (k_sem_take(&dev_data->write_lock, K_NO_WAIT)) {
 		return -EACCES;
 	}
+	#endif
 
 	SYS_UnlockReg();
 	key = irq_lock();
@@ -117,8 +125,10 @@ static int flash_numaker_erase(const struct device *dev, off_t offset, size_t le
 done:
 	SYS_LockReg();
 	irq_unlock(key);
+	#if defined(CONFIG_MULTITHREADING)
 	/* release semaphore */
 	k_sem_give(&dev_data->write_lock);
+	#endif
 
 	return rc;
 }
@@ -207,9 +217,11 @@ static int flash_numaker_write(const struct device *dev, off_t offset, const voi
 		return -EINVAL;
 	}
 
+	#if defined(CONFIG_MULTITHREADING)
 	if (k_sem_take(&dev_data->write_lock, K_FOREVER)) {
 		return -EACCES;
 	}
+	#endif
 
 	key = irq_lock();
 
@@ -226,7 +238,9 @@ static int flash_numaker_write(const struct device *dev, off_t offset, const voi
 done:
 	irq_unlock(key);
 
+	#if defined(CONFIG_MULTITHREADING)
 	k_sem_give(&dev_data->write_lock);
+	#endif
 
 	return rc;
 }
@@ -270,7 +284,9 @@ static int flash_numaker_init(const struct device *dev)
 {
 	struct flash_numaker_data *dev_data = dev->data;
 
+	#if defined(CONFIG_MULTITHREADING)
 	k_sem_init(&dev_data->write_lock, 1, 1);
+	#endif
 
 	/* Enable FMC ISP function */
 	SYS_UnlockReg();
