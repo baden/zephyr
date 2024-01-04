@@ -59,11 +59,11 @@ void SYS_Init(void)
     /* Set core clock to 96MHz */
     CLK_SetCoreClock(96000000);
 
-    /* Enable UART0 module clock */
-    CLK_EnableModuleClock(UART3_MODULE);
+//     /* Enable UART0 module clock */
+//     CLK_EnableModuleClock(UART3_MODULE);
 
-    /* Select UART0 module clock source as HIRC and UART0 module clock divider as 1 */
-    CLK_SetModuleClock(UART3_MODULE, CLK_CLKSEL2_UART3SEL_HIRC, CLK_CLKDIV4_UART3(1));
+//     /* Select UART0 module clock source as HIRC and UART0 module clock divider as 1 */
+//     CLK_SetModuleClock(UART3_MODULE, CLK_CLKSEL2_UART3SEL_HIRC, CLK_CLKDIV4_UART3(1));
 
     /* Enable EPWM0 module clock */
     CLK_EnableModuleClock(EPWM0_MODULE);
@@ -386,6 +386,7 @@ WWDT=Bus Clock(PCLK0):1MHz/Engine Clock:488.2813Hz
 }
 #endif
 
+#if 0
 void UART3_Init(void)
 {
     /*---------------------------------------------------------------------------------------------------------*/
@@ -400,14 +401,16 @@ void UART3_Init(void)
 
 void SendChar_ToUART(int ch)
 {
-    if((char)ch == '\n')
-    {
-        while(DEBUG_PORT->FIFOSTS & UART_FIFOSTS_TXFULL_Msk) {}
-        DEBUG_PORT->DAT = '\r';
-    }
+	UART_Write(UART3, (uint8_t *)&ch, 1);
 
-    while(DEBUG_PORT->FIFOSTS & UART_FIFOSTS_TXFULL_Msk) {}
-    DEBUG_PORT->DAT = (uint32_t)ch;
+//     if((char)ch == '\n')
+//     {
+//         while(DEBUG_PORT->FIFOSTS & UART_FIFOSTS_TXFULL_Msk) {}
+//         DEBUG_PORT->DAT = '\r';
+//     }
+
+//     while(DEBUG_PORT->FIFOSTS & UART_FIFOSTS_TXFULL_Msk) {}
+//     DEBUG_PORT->DAT = (uint32_t)ch;
 }
 
 int arch_printk_char_out(int c)
@@ -415,6 +418,7 @@ int arch_printk_char_out(int c)
 	SendChar_ToUART(c);
 	return 0;
 }
+#endif
 
 void z_arm_platform_init(void)
 {
@@ -429,8 +433,8 @@ void z_arm_platform_init(void)
     /* Lock protected registers */
     SYS_LockReg();
 
-    UART3_Init();
-    SendChar_ToUART('\n'); SendChar_ToUART('+'); SendChar_ToUART('\n');
+//     UART3_Init();
+//     SendChar_ToUART('\n'); SendChar_ToUART('+'); SendChar_ToUART('\n');
 
 	return;
 

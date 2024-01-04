@@ -90,9 +90,9 @@
              };
          };
 
-         uart0: serial@40030000 {
+         uart0: serial@40070000 {
              compatible = "nuvoton,numaker-uart";
-             reg = <0x40030000 0x1000>;
+             reg = <0x40070000 0x1000>;
              interrupts = <36 0>;
              resets = <&rst NUMAKER_UART0_RST>;
              clocks = <&pcc NUMAKER_UART0_MODULE NUMAKER_CLK_CLKSEL2_UART0SEL_HIRC
@@ -100,9 +100,9 @@
              status = "disabled";
          };
 
-         uart1: serial@40031000 {
+         uart1: serial@40071000 {
              compatible = "nuvoton,numaker-uart";
-             reg = <0x40031000 0x1000>;
+             reg = <0x40071000 0x1000>;
              interrupts = <37 0>;
              resets = <&rst NUMAKER_UART1_RST>;
              clocks = <&pcc NUMAKER_UART1_MODULE NUMAKER_CLK_CLKSEL2_UART1SEL_HIRC
@@ -110,9 +110,9 @@
              status = "disabled";
          };
 
-         uart2: serial@40032000 {
+         uart2: serial@40072000 {
              compatible = "nuvoton,numaker-uart";
-             reg = <0x40032000 0x1000>;
+             reg = <0x40072000 0x1000>;
              interrupts = <48 0>;
              resets = <&rst NUMAKER_UART2_RST>;
              clocks = <&pcc NUMAKER_UART2_MODULE NUMAKER_CLK_CLKSEL2_UART2SEL_HIRC
@@ -120,19 +120,20 @@
              status = "disabled";
          };
 
-         uart3: serial@40033000 {
+         uart3: serial@40073000 {
              compatible = "nuvoton,numaker-uart";
-             reg = <0x40033000 0x1000>;
+             reg = <0x40073000 0x1000>;
              interrupts = <49 0>;
              resets = <&rst NUMAKER_UART3_RST>;
              clocks = <&pcc NUMAKER_UART3_MODULE NUMAKER_CLK_CLKSEL2_UART3SEL_HIRC
                    NUMAKER_CLK_CLKDIV4_UART3(1)>;
+		//    NUMAKER_CLK_CLKSEL2_UART3SEL_HIRC, NUMAKER_CLK_CLKDIV4_UART3(1)
              status = "disabled";
          };
 
-         uart4: serial@40034000 {
+         uart4: serial@40074000 {
              compatible = "nuvoton,numaker-uart";
-             reg = <0x40034000 0x1000>;
+             reg = <0x40074000 0x1000>;
              interrupts = <74 0>;
              resets = <&rst NUMAKER_UART4_RST>;
              clocks = <&pcc NUMAKER_UART4_MODULE NUMAKER_CLK_CLKSEL3_UART4SEL_HIRC
@@ -140,9 +141,9 @@
              status = "disabled";
          };
 
-         uart5: serial@40035000 {
+         uart5: serial@40075000 {
              compatible = "nuvoton,numaker-uart";
-             reg = <0x40035000 0x1000>;
+             reg = <0x40075000 0x1000>;
              interrupts = <75 0>;
              resets = <&rst NUMAKER_UART5_RST>;
              clocks = <&pcc NUMAKER_UART5_MODULE NUMAKER_CLK_CLKSEL3_UART5SEL_HIRC
