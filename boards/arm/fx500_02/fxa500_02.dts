@@ -53,11 +53,12 @@
 	// };
 };
 
-&scc {
-	/* For USB 1.1 Host/Device/OTG, configure to 192MHz, which can generate necessary 48MHz. */
-	/* For USB 2.0 Host/Device/OTG or no USB application, comment out to use default. */
-	core-clock = <192000000>;
-};
+// &scc {
+// 	/* For USB 1.1 Host/Device/OTG, configure to 192MHz, which can generate necessary 48MHz. */
+// 	/* For USB 2.0 Host/Device/OTG or no USB application, comment out to use default. */
+// 	// core-clock = <192000000>;
+// 	core-clock = <4000000>;
+// };
 
 &gpioc {
 	status = "okay";

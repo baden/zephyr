@@ -47,14 +47,17 @@ void SYS_Init(void)
 
 #define __HXT         (12000000UL)  /*!< High Speed External Crystal Clock Frequency */
 
+#if 0
 void SYS_Init(void)
 {
 
     /* Enable HIRC clock */
-    CLK_EnableXtalRC(CLK_PWRCTL_HIRCEN_Msk);
+//     CLK_EnableXtalRC(CLK_PWRCTL_HIRCEN_Msk);
+    CLK_EnableXtalRC(CLK_PWRCTL_HIRCEN_Msk | CLK_PWRCTL_LIRCEN_Msk);
 
     /* Wait for HIRC clock ready */
-    CLK_WaitClockReady(CLK_STATUS_HIRCSTB_Msk);
+//     CLK_WaitClockReady(CLK_STATUS_HIRCSTB_Msk);
+    CLK_WaitClockReady(CLK_STATUS_HIRCSTB_Msk | CLK_STATUS_LIRC32STB_Msk);
 
     /* Set core clock to 96MHz */
     CLK_SetCoreClock(96000000);
@@ -75,7 +78,7 @@ void SYS_Init(void)
 
     /* Enable IP clock */
 //     CLK_EnableModuleClock(FMCIDLE_MODULE);
-    CLK_EnableModuleClock(GPF_MODULE);
+//     CLK_EnableModuleClock(GPF_MODULE);
     CLK_EnableModuleClock(SRAM0_MODULE);
     CLK_EnableModuleClock(SRAM1_MODULE);
     CLK_EnableModuleClock(SRAM2_MODULE);
@@ -90,6 +93,56 @@ void SYS_Init(void)
 
     SYS->GPC_MFPL = (SYS->GPC_MFPL & (~(UART3_RXD_PC2_Msk | UART3_TXD_PC3_Msk))) | UART3_RXD_PC2 | UART3_TXD_PC3;
 }
+#endif
+void SYS_Init()
+{
+    /* If the macros do not exist in your project, please refer to the related clk.h in Header folder of the tool package */
+    /* Enable clock source */
+    CLK_EnableXtalRC(CLK_PWRCTL_LIRCEN_Msk | CLK_PWRCTL_HIRCEN_Msk);
+
+    /* Waiting for clock source ready */
+    CLK_WaitClockReady(CLK_STATUS_LIRCSTB_Msk | CLK_STATUS_HIRCSTB_Msk);
+
+    /* Set HCLK clock */
+    CLK_SetHCLK(CLK_CLKSEL0_HCLKSEL_HIRC, CLK_CLKDIV0_HCLK(3));
+
+    /* Enable IP clock */
+    CLK_EnableModuleClock(EADC_MODULE);
+    CLK_EnableModuleClock(FMCIDLE_MODULE);
+    CLK_EnableModuleClock(GPA_MODULE);
+    CLK_EnableModuleClock(GPB_MODULE);
+    CLK_EnableModuleClock(GPC_MODULE);
+    CLK_EnableModuleClock(GPD_MODULE);
+    CLK_EnableModuleClock(GPE_MODULE);
+    CLK_EnableModuleClock(GPF_MODULE);
+    CLK_EnableModuleClock(RTC_MODULE);
+    CLK_EnableModuleClock(SRAM0_MODULE);
+    CLK_EnableModuleClock(SRAM1_MODULE);
+    CLK_EnableModuleClock(SRAM2_MODULE);
+    CLK_EnableModuleClock(TMR0_MODULE);
+    CLK_EnableModuleClock(TMR1_MODULE);
+    CLK_EnableModuleClock(UART3_MODULE);
+    CLK_EnableSysTick(CLK_CLKSEL0_STCLKSEL_HCLK_DIV2, 0);
+
+    /* Set IP clock */
+    CLK_SetModuleClock(EADC_MODULE, MODULE_NoMsk, CLK_CLKDIV0_EADC(1));
+    RTC->LXTCTL |= RTC_LXTCTL_RTCCKSEL_Msk;
+    // CLK_SetModuleClock(TMR0_MODULE, CLK_CLKSEL1_TMR0SEL_LIRC, MODULE_NoMsk);
+    // CLK_SetModuleClock(TMR1_MODULE, CLK_CLKSEL1_TMR1SEL_LIRC, MODULE_NoMsk);
+    CLK_SetModuleClock(TMR0_MODULE, CLK_CLKSEL1_TMR0SEL_PCLK0, MODULE_NoMsk);
+    CLK_SetModuleClock(TMR1_MODULE, CLK_CLKSEL1_TMR1SEL_PCLK0, MODULE_NoMsk);
+
+    CLK_SetModuleClock(UART3_MODULE, CLK_CLKSEL2_UART3SEL_HIRC, CLK_CLKDIV4_UART3(1));
+
+    /* Update System Core Clock */
+    /* User can use SystemCoreClockUpdate() to calculate SystemCoreClock. */
+    SystemCoreClockUpdate();
+
+    SYS->GPC_MFPL = (SYS->GPC_MFPL & (~(UART3_RXD_PC2_Msk | UART3_TXD_PC3_Msk))) | UART3_RXD_PC2 | UART3_TXD_PC3;
+
+}
+
+
 
 #if 0
 

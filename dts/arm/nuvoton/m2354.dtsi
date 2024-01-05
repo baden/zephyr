@@ -48,7 +48,8 @@
 
      sysclk: system-clock {
          compatible = "fixed-clock";
-         clock-frequency = <96000000>;
+        //  clock-frequency = <96000000>;
+         clock-frequency = <4000000>;
          #clock-cells = <0>;
      };
 
@@ -61,7 +62,8 @@
              /* lxt = "enable"; */
         //      clk-pclkdiv = <(NUMAKER_CLK_PCLKDIV_APB0DIV_DIV2 |
         //               NUMAKER_CLK_PCLKDIV_APB1DIV_DIV2)>;
-             core-clock = <96000000>;
+		// core-clock = <96000000>;
+		core-clock = <4000000>;
 
              pcc: peripheral-clock-controller {
                  compatible = "nuvoton,numaker-pcc";
